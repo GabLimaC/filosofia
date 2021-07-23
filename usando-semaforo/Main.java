@@ -4,7 +4,7 @@ import java.util.concurrent.Semaphore;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Principal {
+public class Main {
 
     static Semaphore mutex = new Semaphore(1);
     //semaforo para cada filosofo
