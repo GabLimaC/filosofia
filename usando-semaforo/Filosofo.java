@@ -13,12 +13,12 @@ public class Filosofo extends Thread {
     }
 
     public void ComFome() {
-        Principal.estado[this.id] = 1;
+        Main.estado[this.id] = 1;
         System.out.println("O Filósofo " + getName() + " está FAMINTO!");
     }
 
     public void Come() {
-        Principal.estado[this.id] = 2;
+        Main.estado[this.id] = 2;
         System.out.println("O Filósofo " + getName() + " está COMENDO!");
         try {
             Thread.sleep(1000L);
@@ -28,7 +28,7 @@ public class Filosofo extends Thread {
     }
 
     public void Pensa() {
-        Principal.estado[this.id] = 0;
+        Main.estado[this.id] = 0;
         System.out.println("O Filósofo " + getName() + " está PENSANDO!");
         try {
             Thread.sleep(1000L);
@@ -38,36 +38,36 @@ public class Filosofo extends Thread {
     }
 
     public void LargarGarfo() throws InterruptedException {
-        Principal.mutex.acquire();
+        Main.mutex.acquire();
         Pensa();
         /*Quando um filosofo largar os garfos, o vizinho da esquera e da direita
         podem tentar pegar os garfos*/
-        Principal.filosofos[VizinhoEsquerda()].TentarObterGarfos();
-        Principal.filosofos[VizinhoDireita()].TentarObterGarfos();
-        Principal.mutex.release();
+        Main.filosofos[VizinhoEsquerda()].TentarObterGarfos();
+        Main.filosofos[VizinhoDireita()].TentarObterGarfos();
+        Main.mutex.release();
     }
 
     public void PegarGarfo() throws InterruptedException {
-        Principal.mutex.acquire();
+        Main.mutex.acquire();
         ComFome();
         //caso a condição for verdadeira, semaforo(1), permitindo
         //que o filosofo obtenha os garfos
         TentarObterGarfos();        
-        Principal.mutex.release();
+        Main.mutex.release();
         //caso a condição não seja verdadeira, o filosofo vai ficar travado
         //no seu respectivo indice do semaforo, até chegar sua vez novamente
         //para tentar pegar os garfos
-        Principal.semaforos[this.id].acquire();//semaforos[this.id] = new Semaphore(0)
+        Main.semaforos[this.id].acquire();//semaforos[this.id] = new Semaphore(0)
     }
 
     public void TentarObterGarfos() {
         //se o filosofo estiver faminto e o vizinho esquerdo e direito não
         //estiver comendo, chama metodo come();
-        if (Principal.estado[this.id] == 1
-                && Principal.estado[VizinhoEsquerda()] != 2
-                && Principal.estado[VizinhoDireita()] != 2) {
+        if (Main.estado[this.id] == 1
+                && Main.estado[VizinhoEsquerda()] != 2
+                && Main.estado[VizinhoDireita()] != 2) {
             Come();
-            Principal.semaforos[this.id].release();//semaforos[this.id] = new Semaphore(1)
+            Main.semaforos[this.id].release();//semaforos[this.id] = new Semaphore(1)
         } else {
             System.out.println(getName() + " não conseguiu comer!");
         }
